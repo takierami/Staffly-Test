@@ -1,0 +1,23 @@
+# bunfig.toml - Bun Configuration for Staffly AI
+# Copy this to /bunfig.toml when deploying with Bun runtime
+
+[install]
+cache = true
+registry = "https://registry.npmjs.org/"
+production = false
+
+[install.lockfile]
+save = true
+
+[run]
+shell = "bash"
+bun = true
+
+[test]
+preload = ["./tests/setup.ts"]
+coverage = true
+
+[build]
+target = "bun"
+minify = true
+sourcemap = "external"
