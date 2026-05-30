@@ -19,6 +19,16 @@ import { AdminPrivilege } from "./pages/AdminPrivilege";
 import { Login } from "./pages/Login";
 import { EmployeePortal } from "./pages/EmployeePortal";
 
+// Public Pages
+import { PublicLayout } from "./pages/public/PublicLayout";
+import { HomePage } from "./pages/public/HomePage";
+import { FeaturesPage } from "./pages/public/FeaturesPage";
+import { PricingPage } from "./pages/public/PricingPage";
+import { AboutPage } from "./pages/public/AboutPage";
+import { ContactPage } from "./pages/public/ContactPage";
+import { SecurityPage } from "./pages/public/SecurityPage";
+import { HelpPage } from "./pages/public/HelpPage";
+
 // Super Admin Imports
 import { SuperAdminLayout } from "./super-admin/layout/SuperAdminLayout";
 import { PlatformBI } from "./super-admin/features/analytics/PlatformBI";
@@ -31,10 +41,44 @@ import { SecurityCenter } from "./super-admin/features/security/SecurityCenter";
 import { PlatformSettings } from "./super-admin/features/infrastructure/PlatformSettings";
 
 export const router = createBrowserRouter([
+  // Public Website Routes
+  {
+    path: "/",
+    Component: PublicLayout,
+    children: [
+      { index: true, Component: HomePage },
+      { path: "features", Component: FeaturesPage },
+      { path: "features/:slug", Component: FeaturesPage },
+      { path: "pricing", Component: PricingPage },
+      { path: "about", Component: AboutPage },
+      { path: "contact", Component: ContactPage },
+      { path: "security", Component: SecurityPage },
+      { path: "help", Component: HelpPage },
+      { path: "help/:category", Component: HelpPage },
+      { path: "help/article/:slug", Component: HelpPage },
+      { path: "demo", Component: Login },
+      // Placeholder routes (render same components for now)
+      { path: "solutions", Component: FeaturesPage },
+      { path: "solutions/:slug", Component: FeaturesPage },
+      { path: "resources", Component: FeaturesPage },
+      { path: "blog", Component: FeaturesPage },
+      { path: "case-studies", Component: FeaturesPage },
+      { path: "webinars", Component: FeaturesPage },
+      { path: "docs", Component: FeaturesPage },
+      { path: "careers", Component: AboutPage },
+      { path: "security", Component: ContactPage },
+      { path: "press", Component: AboutPage },
+      { path: "privacy", Component: ContactPage },
+      { path: "terms", Component: ContactPage },
+      { path: "cookies", Component: ContactPage },
+      { path: "gdpr", Component: ContactPage },
+      { path: "integrations", Component: FeaturesPage },
+    ],
+  },
+  // Auth Routes (no PublicLayout)
   {
     Component: GuestOnly,
     children: [
-      { path: "/", Component: Login },
       { path: "/login", Component: Login },
     ],
   },
