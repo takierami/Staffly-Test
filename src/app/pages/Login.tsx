@@ -5,6 +5,8 @@ import { useApp } from "../context/AppContext";
 import { useNavigate } from "react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import stafflyLogo from "@/imports/photo_2026-05-24_18-48-49-removebg-preview__3_.png";
+import { authService } from "../lib/supabase/authService";
+import { profileService } from "../lib/supabase/profileService";
 
 const ROLE_OPTIONS: { value: UserRole; label: string; labelAr: string; desc: string; descAr: string; icon: string }[] = [
   { value: "super_admin", label: "Super Admin", labelAr: "مدير عام", desc: "Platform administrator", descAr: "مدير المنصة", icon: "🔐" },
@@ -116,8 +118,29 @@ export function Login() {
     e.preventDefault();
     setError("");
     const result = await login(email, password);
-    if (!result.success) { setError(result.message); return; }
-    // The GuestOnly guard will automatically redirect once currentUser is populated
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+    // Get the user profile to determine redirect
+    try {
+      const { data: { user } } = await authService.getSession();
+      if (user) {
+        const profile = await profileService.getProfile(user.id);
+        if (profile) {
+          // Redirect based on role
+          if (profile.role === 'super_admin') {
+            navigate('/super-admin', { replace: true });
+          } else if (profile.role === 'employee') {
+            navigate('/portal', { replace: true });
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Post-login redirect error:', err);
+    }
   };
 
   const handleForgot = (e: React.FormEvent) => {
