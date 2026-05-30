@@ -3,11 +3,11 @@ import { supabase } from './supabaseClient';
 export const profileService = {
   async getProfiles(orgId?: string) {
     let query = supabase.from('profiles').select('*');
-    
+
     if (orgId) {
       query = query.eq('organization_id', orgId);
     }
-    
+
     const { data, error } = await query;
     if (error) throw error;
     return data;
@@ -18,8 +18,25 @@ export const profileService = {
       .from('profiles')
       .select('*')
       .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async createProfile(profile: {
+    id: string;
+    email: string;
+    full_name?: string;
+    role?: string;
+    organization_id?: string;
+  }) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert(profile)
+      .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -30,8 +47,8 @@ export const profileService = {
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
-    
+      .maybeSingle();
+
     if (error) throw error;
     return data;
   },
@@ -42,8 +59,8 @@ export const profileService = {
       .update({ status })
       .eq('id', id)
       .select()
-      .single();
-    
+      .maybeSingle();
+
     if (error) throw error;
     return data;
   }

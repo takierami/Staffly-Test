@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, Shield, Building2, Globe, Moon, Sun, AlertCircle, Loader2, Lock, Mail, ChevronDown, Users, BarChart3, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Shield, Building2, Globe, Moon, Sun, CircleAlert as AlertCircle, Loader as Loader2, Lock, Mail, ChevronDown, Users, ChartBar as BarChart3, Zap, ArrowRight, CircleCheck as CheckCircle2 } from "lucide-react";
 import { useAuth, type UserRole } from "../context/AuthContext";
 import { useApp } from "../context/AppContext";
 import { useNavigate } from "react-router";
@@ -7,12 +7,14 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import stafflyLogo from "@/imports/photo_2026-05-24_18-48-49-removebg-preview__3_.png";
 
 const ROLE_OPTIONS: { value: UserRole; label: string; labelAr: string; desc: string; descAr: string; icon: string }[] = [
-  { value: "admin", label: "Admin / CEO", labelAr: "مدير / رئيس تنفيذي", desc: "Full system access", descAr: "صلاحية كاملة للنظام", icon: "⚡" },
-  { value: "hr_manager", label: "HR Manager", labelAr: "مدير الموارد البشرية", desc: "HR operations access", descAr: "صلاحية عمليات الموارد البشرية", icon: "👥" },
-  { value: "employee", label: "Employee", labelAr: "موظف", desc: "Employee self-service", descAr: "خدمة ذاتية للموظف", icon: "🙋" },
+  { value: "super_admin", label: "Super Admin", labelAr: "مدير عام", desc: "Platform administrator", descAr: "مدير المنصة", icon: "🔐" },
+  { value: "admin", label: "Admin", labelAr: "مدير", desc: "Organization admin", descAr: "مدير المؤسسة", icon: "🏢" },
+  { value: "hr_manager", label: "HR Manager", labelAr: "مدير موارد بشرية", desc: "HR operations", descAr: "عمليات الموارد البشرية", icon: "👥" },
+  { value: "employee", label: "Employee", labelAr: "موظف", desc: "Staff portal", descAr: "بوابة الموظفين", icon: "👤" },
 ];
 
 const DEMO_CREDENTIALS: Record<UserRole, { email: string; password: string }> = {
+  super_admin: { email: "taki@boss.dz", password: "TakiTakiBossBoss123/" },
   admin: { email: "admin@staffly.dz", password: "admin123" },
   hr_manager: { email: "hr@staffly.dz", password: "hr123" },
   employee: { email: "employee@staffly.dz", password: "emp123" },
@@ -63,7 +65,7 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<UserRole>("admin");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("super_admin");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
