@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { useNavigate } from "react-router";
 import { authService } from "../lib/supabase/authService";
 import { profileService } from "../lib/supabase/profileService";
 import { supabaseAdmin } from "../lib/supabase/supabaseAdmin";
@@ -91,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<ManagedAccount[]>([]);
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -100,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const session = await authService.getSession();
         if (session && session.user) {
           const profile = await profileService.getProfile(session.user.id);
-          if (mounted) {
+          if (mounted && profile) {
             setCurrentUser({
               id: session.user.id,
               email: session.user.email!,
@@ -133,21 +135,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === 'SIGNED_IN' && session) {
         try {
           const profile = await profileService.getProfile(session.user.id);
-          setCurrentUser({
-            id: session.user.id,
-            email: session.user.email!,
-            name: profile.full_name,
-            nameAr: profile.full_name_ar || "",
-            role: profile.role as UserRole,
-            status: profile.status as AccountStatus,
-            organizationId: profile.organization_id,
-            avatar: profile.avatar_url,
-            employeeId: profile.employee_id,
-            department: profile.department,
-            position: profile.position,
-            createdAt: profile.created_at,
-            createdBy: "system",
-          });
+          if (profile) {
+            setCurrentUser({
+              id: session.user.id,
+              email: session.user.email!,
+              name: profile.full_name,
+              nameAr: profile.full_name_ar || "",
+              role: profile.role as UserRole,
+              status: profile.status as AccountStatus,
+              organizationId: profile.organization_id,
+              avatar: profile.avatar_url,
+              employeeId: profile.employee_id,
+              department: profile.department,
+              position: profile.position,
+              createdAt: profile.created_at,
+              createdBy: "system",
+            });
+            // Store the profile ID and role to help debug
+            console.log('Auth: User signed in', { id: session.user.id, role: profile.role });
+          } else {
+            console.error('Auth: Profile not found for user', session.user.id);
+          }
         } catch (error) {
           console.error("Failed to fetch profile:", error);
         } finally {

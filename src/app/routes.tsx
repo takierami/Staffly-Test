@@ -41,6 +41,14 @@ import { SecurityCenter } from "./super-admin/features/security/SecurityCenter";
 import { PlatformSettings } from "./super-admin/features/infrastructure/PlatformSettings";
 
 export const router = createBrowserRouter([
+  // Auth Routes (outside PublicLayout for proper redirect handling)
+  {
+    Component: GuestOnly,
+    children: [
+      { path: "/login", Component: Login },
+      { path: "/demo", Component: Login },
+    ],
+  },
   // Public Website Routes
   {
     path: "/",
@@ -56,7 +64,6 @@ export const router = createBrowserRouter([
       { path: "help", Component: HelpPage },
       { path: "help/:category", Component: HelpPage },
       { path: "help/article/:slug", Component: HelpPage },
-      { path: "demo", Component: Login },
       // Placeholder routes (render same components for now)
       { path: "solutions", Component: FeaturesPage },
       { path: "solutions/:slug", Component: FeaturesPage },
@@ -66,20 +73,12 @@ export const router = createBrowserRouter([
       { path: "webinars", Component: FeaturesPage },
       { path: "docs", Component: FeaturesPage },
       { path: "careers", Component: AboutPage },
-      { path: "security", Component: ContactPage },
       { path: "press", Component: AboutPage },
       { path: "privacy", Component: ContactPage },
       { path: "terms", Component: ContactPage },
       { path: "cookies", Component: ContactPage },
       { path: "gdpr", Component: ContactPage },
       { path: "integrations", Component: FeaturesPage },
-    ],
-  },
-  // Auth Routes (no PublicLayout)
-  {
-    Component: GuestOnly,
-    children: [
-      { path: "/login", Component: Login },
     ],
   },
   {

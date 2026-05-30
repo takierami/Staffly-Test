@@ -122,25 +122,6 @@ export function Login() {
       setError(result.message);
       return;
     }
-    // Get the user profile to determine redirect
-    try {
-      const { data: { user } } = await authService.getSession();
-      if (user) {
-        const profile = await profileService.getProfile(user.id);
-        if (profile) {
-          // Redirect based on role
-          if (profile.role === 'super_admin') {
-            navigate('/super-admin', { replace: true });
-          } else if (profile.role === 'employee') {
-            navigate('/portal', { replace: true });
-          } else {
-            navigate('/dashboard', { replace: true });
-          }
-        }
-      }
-    } catch (err) {
-      console.error('Post-login redirect error:', err);
-    }
   };
 
   const handleForgot = (e: React.FormEvent) => {
